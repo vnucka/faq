@@ -19,7 +19,7 @@
   <img src="./img/bed_reg.png" alt="">
      <p><strong>Упс...</strong></p>
      <p>Кажется, что то пошло не так. <br> Вы пытаетесь войти в закрытую часть сайта без резистрации.</p>
-     <p>Пройдите пожалуйста <a href="{{ url('/login') }}"><strong>авторизацию</strong></a> или <a href="{{ url('/register') }}"><strong>зарегестрируйтесь</strong></a><br>
+     <p>Пройдите пожалуйста <a href="{{ url('/login') }}"><strong>авторизацию</strong></a> или <a href="{{ url('/register') }}"><strong>зарегистрируйтесь</strong></a><br>
          так же вы можете вернуться <a href="{{url('/')}}"><strong>на главную</strong></a>.
      </p>
  </div>

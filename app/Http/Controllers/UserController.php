@@ -58,6 +58,11 @@ class UserController extends Controller
         {
             $deleteUserId = $_REQUEST['delete_user'];
 
+            if(User::find($deleteUserId)->email == 'admin@local.ru')
+            {
+                dd(123);
+            }
+
             if(User::where('id', $deleteUserId)->delete())
             {
                 Question::where('user_id', $deleteUserId)->delete();

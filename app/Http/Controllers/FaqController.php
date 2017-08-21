@@ -78,18 +78,18 @@ class FaqController extends Controller
             $editID = (isset($_REQUEST['edit_question_id'])) ? $_REQUEST['edit_question_id'] : "";
             $author = (int)($_REQUEST['author']);
 
-            if(Question::where('id', $editID)->update(['name' => $_REQUEST['name'], 'text' => $_REQUEST['text'], 'theme_id' => $_REQUEST['theme'], 'user_id'=>$author]))
+            if(Question::where('id', $editID)->update(['name' => $_REQUEST['name'], 'text' => $_REQUEST['text'], 'theme_id' => $_REQUEST['theme'], 'user_id'=>$author, 'moderate'=>'moderate']))
             {
                 return $this->infoReturn('Вопрос отредактирован!', 'success');
             }
         }
 
         if(isset($_REQUEST['edit_question_id']))
-        { // Если существует edit_question_id значит пришел POST запрос от пользователя
+        { // Если существует edit_question_id значит пришел POST запрос от пользователя / модератора
+
             $user_id = (isset($_REQUEST['user_id'])) ? $_REQUEST['user_id'] : null;
             $editID = (isset($_REQUEST['edit_question_id'])) ? $_REQUEST['edit_question_id'] : null;
-
-            if(\Auth::user()->id == $user_id)
+            if(\Auth::user()->id == $user_id || \Auth::user()->role == 'moderator')
             {
                if(Question::where('id', $editID)->update(['name' => $_REQUEST['name'], 'text' => $_REQUEST['text'], 'theme_id' => $_REQUEST['theme'], 'moderate'=>'moderate']))
                    return $this->infoReturn('Вопрос отредактирован!', 'success');
@@ -123,7 +123,7 @@ class FaqController extends Controller
                 {
                     if(Question::where('id', $id)->update(['moderate'=>$moderate]))
                     {
-                        return $this->infoReturn('Статус вопроса изменет!', 'success');
+                        return $this->infoReturn('Статус вопроса изменен!', 'success');
                     } else
                     {
                         return $this->infoReturn('Произошла ошибка при изменении статуса вопроса!', 'error');
