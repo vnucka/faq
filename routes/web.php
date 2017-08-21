@@ -36,6 +36,8 @@ Route::get('/createAnswer', function (){
     return view('bed-reg');
 });
 
+Route::match(['get', 'post'],'/changePassword', 'UserController@changePassword')->name('changePassword');
+
 Route::get('/bed-reg', function (){
     return view('bed-reg');
 });
