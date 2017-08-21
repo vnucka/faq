@@ -6,6 +6,7 @@ use App\Theme;
 use Illuminate\Http\Request;
 use App\Answer;
 use App\Question;
+use App\User;
 
 class MainPageController extends Controller
 {
@@ -33,13 +34,13 @@ class MainPageController extends Controller
             $answer = Answer::where('question_id', $quest['id'])->get()->toArray();
             $answers = array();
 
-
-            if($answers)
+            if($answer)
             { // Проверяем существование ответов на вопрос.
                 foreach ($answer as $oneAnswer)
                 {
-                    $answerItem = ['user_name' => Answer::find($oneAnswer['user_id'])->user->name];
-                    $answers[] = array_merge($oneAnswer + $answerItem);
+                    $userId = $oneAnswer['user_id'];
+                    $answerItem = ['user_name' => User::find($userId)->name];
+                    $answers[] = $oneAnswer + $answerItem;
                 }
             }
             $questions[] = $quest + $user + array('answers' => $answers);
