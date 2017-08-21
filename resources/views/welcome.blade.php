@@ -38,12 +38,13 @@
                 <ul class="cd-faq-categories cd-faq-categories-scroll cd-faq-categories-lk">
             @endif
         @endif
-            <li><a class="selected" href="#basics">Basics</a></li>
-            <li><a href="#mobile">Mobile</a></li>
-            <li><a href="#account">Account</a></li>
-            <li><a href="#payments">Payments</a></li>
-            <li><a href="#privacy">Privacy</a></li>
-            <li><a href="#delivery">Delivery</a></li>
+            @foreach($themes as $theme)
+                @if($theme['id'] == $themes[0]['id'])
+                    <li><a class="selected" href="#theme_{{$theme['id']}}">{{$theme['name']}}</a></li>
+                @else
+                    <li><a href="#theme_{{$theme['id']}}">{{$theme['name']}}</a></li>
+                @endif
+            @endforeach
         </ul> <!-- cd-faq-categories -->
     </div>
 

@@ -1,5 +1,5 @@
-<ul id="basics" class="cd-faq-group">
-    @foreach($themes as $theme)
+@foreach($themes as $theme)
+    <ul id="theme_{{$theme['id']}}" class="cd-faq-group">
         <li class="cd-faq-title"><h2>{{$theme['name']}}</h2></li>
         @foreach($questions as $question)
             @if($theme['id'] == $question['theme_id'])
@@ -37,5 +37,5 @@
                 </li>
             @endif
         @endforeach
-    @endforeach
-</ul>
+    </ul>
+@endforeach
