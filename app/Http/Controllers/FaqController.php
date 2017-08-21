@@ -562,24 +562,24 @@ class FaqController extends Controller
         {
             if($visible == "1")
             {
-                return Question::where('moderate','confim')->get()->sortBy('create_at')->toArray();
+                return Question::where('moderate','confim')->orderBy('created_at', 'ASC')->get()->toArray();
             } elseif($visible == "0")
             {
-                return Question::where('moderate','!=','confim')->get()->sortBy('create_at')->toArray();
+                return Question::where('moderate','!=','confim')->orderBy('created_at', 'ASC')->get()->toArray();
             } else
             {
-                return Question::all()->sortBy('create_at')->toArray();
+                return Question::all()->sortBy('created_at')->toArray();
             }
         } else {
             if($visible == "1")
             {
-                return Question::whereRaw("user_id = $thisUserId and moderate = 'confim'")->get()->sortBy('create_at')->toArray();
+                return Question::whereRaw("user_id = $thisUserId and moderate = 'confim'")->orderBy('created_at', 'ASC')->get()->toArray();
             } else if($visible == "0")
             {
-                return Question::whereRaw("user_id = $thisUserId and moderate != 'confim'")->get()->sortBy('create_at')->toArray();
+                return Question::whereRaw("user_id = $thisUserId and moderate != 'confim'")->orderBy('created_at', 'ASC')->get()->toArray();
             } else
             {
-                return Question::where('user_id' , $thisUserId)->get()->sortBy('create_at')->toArray();
+                return Question::where('user_id' , $thisUserId)->orderBy('created_at', 'ASC')->get()->toArray();
             }
         }
 
