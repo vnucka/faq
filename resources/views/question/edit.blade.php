@@ -10,7 +10,7 @@
                     @foreach($question as $quest)
                         <form class="form-horizontal" method="POST" action="{{route('editQuestion')}}?user_id={{$quest['user_id']}}&edit_question_id={{$quest['id']}}">
                             {{ csrf_field() }}
-                            @if($thisUserRole == "admin" || $thisUserRole == "moderator")
+                            @if($thisUserRole == "admin")
                             <div class="form-group">
                                 <label for="author" class="col-md-4 control-label">Автор</label>
                                 <div class="col-md-6">
