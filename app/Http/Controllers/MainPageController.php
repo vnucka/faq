@@ -12,7 +12,7 @@ class MainPageController extends Controller
 {
     public function viewMainPage()
     {
-        $question = Question::where('moderate', 'confim')->get()->sortBy('create_at')->toArray();
+        $question = Question::where('moderate', 'confim')->orderBy('created_at', 'DESC')->get()->toArray();
         $themes = Theme::all()->toArray();
 
         for ($i = 0; $i < count($themes); $i++ )
