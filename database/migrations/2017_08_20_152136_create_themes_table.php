@@ -15,9 +15,8 @@ class CreateThemesTable extends Migration
     {
         Schema::create('themes', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('name')->comment('Название темы');
-            $table->timestamps('created_at')->comment('Дата - время создания');
-            $table->timestamps('updated_at')->comment('Дата - время обновления');
+            $table->string('name');
+            $table->timestamps();
         });
     }
 

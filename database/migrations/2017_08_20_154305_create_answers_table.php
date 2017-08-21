@@ -14,12 +14,11 @@ class CreateAnswersTable extends Migration
     public function up()
     {
         Schema::create('answers', function (Blueprint $table) {
-            $table->increments('id', 10);
-            $table->string('answer', 3000)->comment('Ответ');
-            $table->integer('user_id', 10)->comment('ID пользователя ответа');
-            $table->integer('question_id', 10)->comment('ID вопроса');
-            $table->timestamps('created_at')->default('NOW')->comment('Дата - время создания');
-            $table->timestamps('updated_at')->comment('Дата - время обновления');
+            $table->increments('id');
+            $table->string('answer', 3000);
+            $table->integer('user_id');
+            $table->integer('question_id');
+            $table->timestamps();
         });
     }
 

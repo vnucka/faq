@@ -14,14 +14,13 @@ class CreateQuestionsTable extends Migration
     public function up()
     {
         Schema::create('questions', function (Blueprint $table) {
-            $table->increments('id', 10);
-            $table->integer('theme_id', 10)->comment('ID темы');
-            $table->string('name', 100)->comment('Заголовок вопроса');
-            $table->string('text', 3000)->comment('Текст вопроса');
-            $table->integer('user_id', 10)->comment('ID автора');
-            $table->string('moderate', 30)->default('moderate')->comment('Стадия модерации confim / reject / moderate');
-            $table->timestamps('created_at')->default('NOW')->comment('Дата - время создания');
-            $table->timestamps('updated_at')->comment('Дата - время обновления');
+            $table->increments('id' );
+            $table->integer('theme_id');
+            $table->string('name', 100);
+            $table->string('text', 3000);
+            $table->integer('user_id');
+            $table->string('moderate', 30)->default('moderate');
+            $table->timestamps();
         });
     }
 
