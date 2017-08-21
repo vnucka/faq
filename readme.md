@@ -1,51 +1,75 @@
-<p align="center"><img src="https://laravel.com/assets/img/components/logo-laravel.svg"></p>
+## Система «вопрос – ответ»
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/d/total.svg" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/v/stable.svg" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/license.svg" alt="License"></a>
-</p>
+Система «Вопрос – ответ», помогает пользователям узнать то, что они не знают. <br>
+Любой пользователь может задать вопрос в системе, после проверки администратором системы или же администратором, вопрос будет опубликован на сайте, после чего любой зарегистрированный пользователь может ответить на вопрос.<br>
+Система разделяет 3 типа пользователей:<br>
+1.	Администратор имеет полный доступ к системе.<br>
+•	Редактировать тему<br>
+•	Добавлять новую тему<br>
+•	Просматривать кол-во вопросов в теме, опубликованных на сайте, вопросов без ответов<br>
+•	Удалять пользователей<br>
+•	Изменять имя пользователей<br>
+•	Менять пароль пользователей<br>
+•	Редактировать права доступа пользователей<br>
+•	Удалять тему со всеми вопросами и ответами относящимися к ней<br>
+•	Редактировать вопросы пользователей (автора / тему /  заголовок вопроса / описание вопроса)<br>
+•	Переносить вопросы в другую тему<br>
+•	Отвечать на вопросы<br>
+•	Модерировать вопросы (одобрять / отклонять / возвращать на модерацию)<br>
+•	Добавлять новые вопросы<br>
+•	Изменить свой пароль<br>
+2.	Модератор имеет меньший список прав доступа, чем Администратор.
+•	Отвечать на вопросы<br>
+•	Добавлять новые вопросы<br>
+•	Редактировать вопросы (тему /  заголовок вопроса / описание вопроса)<br>
+•	Модерировать вопросы (одобрять / отклонять / возвращать на модерацию)<br>
+•	Переносить вопросы в другую тему<br>
+•	Изменить свой пароль<br>
+3.	Пользователь имеет ограниченный список прав доступа.
+•	Добавлять новые вопросы<br>
+•	Отвечать на вопросы<br>
+•	Редактировать свои вопросы<br>
+•	Изменить свой пароль<br>
 
-## About Laravel
+## Принцип работы системы «Вопрос – ответ».
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel attempts to take the pain out of development by easing common tasks used in the majority of web projects, such as:
+Заходя на сайт, пользователь видит список вопросов, отсортированный по группам и дате добавления (сначала новые).<br>
+Пользователь может ответить на вопрос, авторизовавшись или зарегистрировавшись на сайте.<br>
+Пользователь может добавить новый вопрос, который попадет на модерацию к администратору / модератору системы, после подтверждения, вопрос будет опубликован на главной странице системы, так же пользователь сможет просмотреть список своих вопросов и ответов по ним в личном кабинете, там же пользователь может посмотреть состояние вопроса (подтвержден, отклонен, на модерации).<br>
+Если пользователь не зарегистрирован в системе, ему будет предложено дополнительно ввести имя и email, по которым пользователь будет зарегистрирован и будет сгенерирован пароль, который можно сменить в личном кабинете, кликнув на свое имя с права и выбрать пункт «Изменить пароль».
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+Статус вопросов делется на цвета:<br>
+`<strong style="color: #a9c056">•	Зеленый цвет текста </strong>` означает что вопрос удачно прошел модерацию и опубликован на сайте.<br>
+`<strong style="color: orange">•	Оранжевый цвет текста </strong>` означает что вопрос находится на модерации и еще не проверен администратором / модератором системы.<br>
+`<strong style="color: red">•	Красный цвет тексты </strong>` означает что вопрос не прошел модерацию, был отклонен и не будет опубликован на сайте.<br>
 
-Laravel is accessible, yet powerful, providing tools needed for large, robust applications. A superb combination of simplicity, elegance, and innovation give you tools you need to build any application with which you are tasked.
+При отклонении вопроса, пользователь может отредактировать вопрос, тему и текст, после чего вопрос повторно попадет на модерацию.<br>
+Даже если вопрос ранее был опубликован и пользователь захотел его изменить, вопрос повторно попадет на модерацию.
 
-## Learning Laravel
 
-Laravel has the most extensive and thorough documentation and video tutorial library of any modern web application framework. The [Laravel documentation](https://laravel.com/docs) is thorough, complete, and makes it a breeze to get started learning the framework.
+## Установка системы
+Для установки системы сначала необходимо установить PHP Composer<br>
+1)	Загрузить установочный пакет:<br>
+•	php -r "readfile('https://getcomposer.org/installer');" | php
+2)	Загрузить сам Composer<br>
+•	php composer.phar require silex/silex ~1.1<br>
+После установки Composer необходимо установить зависимости Laravel<br>
+•	composer install
 
-If you're not in the mood to read, [Laracasts](https://laracasts.com) contains over 900 video tutorials on a range of topics including Laravel, modern PHP, unit testing, JavaScript, and more. Boost the skill level of yourself and your entire team by digging into our comprehensive video library.
+После установки всех зависимостей, composer сгенерирует уникальный APP_KEY, который вы можете просмотреть в файле .env в корне проекта, если ключ не был сгенерирован, необходимо запустить генерацию ключа в ручную при помощи помощника Artisan.<br>
+•	php artisan key:generate<br>
+После необходимо создать базу данных (по умолчанию в системе используется название БД  «faq», вы можете использовать свое).<br>
+Для настройки необходимо зайти в файл .env в корне проекта и отредактировать строки:<br>
+•	DB_CONNECTION=mysql    -   тип подключения к БД<br>
+•	DB_HOST=127.0.0.1   -   IP-адрес сервера базы данных<br>
+•	DB_PORT=3306   -   Порт работы SQL сервера (по умолчанию 3306)<br>
+•	DB_DATABASE=faq    -   Имя базы данных<br>
+•	DB_USERNAME=root   -   Имя пользователя БД<br>
+•	DB_PASSWORD=root   -   Пароль пользователя БД<br>
 
-## Laravel Sponsors
-
-We would like to extend our thanks to the following sponsors for helping fund on-going Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](http://patreon.com/taylorotwell):
-
-- **[Vehikl](http://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[British Software Development](https://www.britishsoftware.co)**
-- **[Styde](https://styde.net)**
-- [Fragrantica](https://www.fragrantica.com)
-- [SOFTonSOFA](https://softonsofa.com/)
-
-## Contributing
-
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](http://laravel.com/docs/contributions).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell at taylor@laravel.com. All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT).
+После создания БД и настройки файла конфигурации, необходимо запустить миграции, для создания таблиц в базе данных. Для этого используем Laravel помощника Artisan.<br>
+•	php artisan make:migration<br>
+После того как миграции были сделаны, в базе данных должны появиться таблица users, questions, themes, answers. Таблицы migrations, password_resets являются системными.<br>
+Для добавления системного пользователя по умолчанию, необходимо запустить «Сиды», делает это так же при помощи помощника Artisan.<br>
+•	php artisan make:seeder<br>
+После выполнения скрипта в базе данных появится пользователь с ролью Администратор с логином admin@faq.ru и паролем admin.<br>
