@@ -11,7 +11,7 @@ class MainPageController extends Controller
 {
     public function viewMainPage()
     {
-        $question = Question::where('moderate', 'confim')->get()->toArray();
+        $question = Question::where('moderate', 'confim')->get()->sortBy('create_at')->toArray();
         $themes = Theme::all()->toArray();
 
         for ($i = 0; $i < count($themes); $i++ )
@@ -33,10 +33,14 @@ class MainPageController extends Controller
             $answer = Answer::where('question_id', $quest['id'])->get()->toArray();
             $answers = array();
 
-            foreach ($answer as $oneAnswer)
-            {
-                $answerItem = ['user_name' => Answer::find($oneAnswer['user_id'])->user->name];
-                $answers[] = array_merge($oneAnswer + $answerItem);
+
+            if($answers)
+            { // Проверяем существование ответов на вопрос.
+                foreach ($answer as $oneAnswer)
+                {
+                    $answerItem = ['user_name' => Answer::find($oneAnswer['user_id'])->user->name];
+                    $answers[] = array_merge($oneAnswer + $answerItem);
+                }
             }
             $questions[] = $quest + $user + array('answers' => $answers);
         }
