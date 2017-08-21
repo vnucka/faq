@@ -107,6 +107,34 @@ class UserController extends Controller
         }
     }
 
+    public function changePassword()
+    {
+        // Проверяем авторизацию пользователя
+        if(!\Auth::user())
+        {
+            redirect('bed-reg');
+        }
+
+        if(isset($_REQUEST['password']))
+        {
+            $userId = (isset($_REQUEST['user_id'])) ? $_REQUEST['user_id'] : "";
+
+            if(Auth::user()->id == $userId)
+            {
+                $password = bcrypt($_REQUEST['password']);
+                if(User::where('id', $userId)->update(['password'=>$password]))
+                {
+                    return $this->infoReturn("Пароль изменен!", 'success');
+                }
+            }
+            return $this->infoReturn("Ошибка редактирования пользователя!", 'error');
+        }
+
+        $userId = Auth::user()->id;
+
+        return view('users.change-password', compact('userId'));
+    }
+
     private function infoReturn($infoText, $infoClass)
     {
         $info = array('infoText'=>$infoText, 'infoClass'=>$infoClass);
