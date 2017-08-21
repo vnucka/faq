@@ -91,7 +91,7 @@ class FaqController extends Controller
 
             if(\Auth::user()->id == $user_id)
             {
-               if(Question::where('id', $editID)->update(['name' => $_REQUEST['name'], 'text' => $_REQUEST['text'], 'theme_id' => $_REQUEST['theme']]))
+               if(Question::where('id', $editID)->update(['name' => $_REQUEST['name'], 'text' => $_REQUEST['text'], 'theme_id' => $_REQUEST['theme'], 'moderate'=>'moderate']))
                    return $this->infoReturn('Вопрос отредактирован!', 'success');
             }
         }
@@ -562,24 +562,24 @@ class FaqController extends Controller
         {
             if($visible == "1")
             {
-                return Question::where('moderate','confim')->get()->toArray();
+                return Question::where('moderate','confim')->get()->sortBy('create_at')->toArray();
             } elseif($visible == "0")
             {
-                return Question::where('moderate','!=','confim')->get()->toArray();
+                return Question::where('moderate','!=','confim')->get()->sortBy('create_at')->toArray();
             } else
             {
-                return Question::all()->toArray();
+                return Question::all()->sortBy('create_at')->toArray();
             }
         } else {
             if($visible == "1")
             {
-                return Question::whereRaw("user_id = $thisUserId and moderate = 'confim'")->get()->toArray();
+                return Question::whereRaw("user_id = $thisUserId and moderate = 'confim'")->get()->sortBy('create_at')->toArray();
             } else if($visible == "0")
             {
-                return Question::whereRaw("user_id = $thisUserId and moderate != 'confim'")->get()->toArray();
+                return Question::whereRaw("user_id = $thisUserId and moderate != 'confim'")->get()->sortBy('create_at')->toArray();
             } else
             {
-                return Question::where('user_id' , $thisUserId)->get()->toArray();
+                return Question::where('user_id' , $thisUserId)->get()->sortBy('create_at')->toArray();
             }
         }
 
