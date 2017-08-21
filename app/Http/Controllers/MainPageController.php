@@ -31,7 +31,7 @@ class MainPageController extends Controller
         {
             $user = ['user_name' => Question::find($quest['id'])->user->name];
 
-            $answer = Answer::where('question_id', $quest['id'])->get()->toArray();
+            $answer = Answer::where('question_id', $quest['id'])->orderBy('created_at', 'DESC')->get()->toArray();
             $answers = array();
 
             if($answer)
