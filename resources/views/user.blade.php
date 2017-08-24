@@ -2,7 +2,7 @@
 
 @section('content')
 
-    <section class="cd-faq">
+    <section class="cd-faq cd-faq-user">
 
         @include('left-menu')
 

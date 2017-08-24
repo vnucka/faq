@@ -39,6 +39,7 @@
                         </div>
 
                         @if($thisUserRole == 'admin' || $thisUserRole == 'moderator' )
+                            <hr>
                             <form action="{{ url('/admQuestion') }}?question_id={{$question['id']}}" method="post">
                                 {{ csrf_field() }}
                                 <p>Модерация</p>
@@ -51,6 +52,7 @@
                                     Подтвердить
                                 </button>
                             </form>
+                            <hr>
 
                             <form action="{{ url('/admQuestion') }}?question_id={{$question['id']}}" method="post">
                                 {{ csrf_field() }}

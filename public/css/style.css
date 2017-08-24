@@ -280,16 +280,6 @@ header h1 {
     background: transparent;
   }
 }
-@media only screen and (min-width: 1024px) {
-  .cd-faq-items {
-    float: none;
-    width: 100%;
-    padding-left: 220px;
-  }
-  .no-js .cd-faq-items {
-    padding-left: 0;
-  }
-}
 
 .cd-close-panel {
   position: fixed;
@@ -869,3 +859,193 @@ form
 {
     width: 100%;
 }
+
+
+
+@media only screen and (min-width: 768px) 
+{
+    .left-menu
+    {
+        width: 25%;
+    }
+    .top-menu .cd-faq-categories
+    {
+        margin-left: 0;
+    }
+    .cd-faq-items
+    {
+        width: 70%;
+    }
+    .cd-faq-group
+    {
+        padding: 0;
+    }
+    .cd-faq-items .top-menu .cd-faq-categories-usr li a
+    {
+        padding: 7px;
+        font-size: 12px;
+        padding-top: 0;
+    }
+    
+    .cd-faq-group-users li a
+    {
+        font-size: 18px;
+    }
+    
+    .cd-faq .menu .left-menu
+    {
+        display: flex;
+        float: left;
+        flex-direction: column;
+        flex-direction: column;
+        align-items: flex-start;        
+    }
+    .cd-faq .menu .left-menu li
+    {
+        width: 100%;
+    }
+    
+    .top-menu .cd-faq-categories-usr li
+    {
+        margin-right: 5px;
+    }   
+}
+
+@media only screen and (min-width: 1024px)
+{
+  .cd-faq-items {
+    float: none;
+    width: 100%;
+    padding-left: 240px;
+  }
+  .no-js .cd-faq-items {
+    padding-left: 0;
+  }
+    
+    .left-menu {
+        width: 20%;
+    }
+    
+    .cd-faq-items .top-menu .cd-faq-categories-usr li a
+    {
+        padding-left: 24px;
+        padding: 0 24px;
+        font-size: 13px;
+    }
+    
+    .top-menu .cd-faq-categories-usr li
+    {
+        margin-right: 20px;
+    }
+    
+    .cd-faq-group-users li a
+    {
+        font-size: 24px;
+    }    
+}
+
+@media only screen and (max-width: 768px)
+{
+    .cd-faq-user
+    {
+        box-shadow: none;
+    }
+    
+    .cd-faq-user .cd-faq-categories li a::after,
+    .cd-faq-user .cd-faq-categories li a::before
+    {
+        display: none;
+    }
+    
+    .cd-faq-user .cd-faq-items
+    {
+        position: relative;
+        left: 0;
+        overflow: hidden;
+        -webkit-transform: translate(0);
+        -ms-transform: translate(0);
+        -o-transform: translate(0);
+        transform: translate(0); 
+        width: 100%;
+        padding: 0;
+        padding-top: 30px;
+        background: none;
+    }
+    
+    .top-menu .cd-faq-categories
+    {
+        margin-left: 0;
+        justify-content: space-around;
+    }
+    .top-menu .cd-faq-categories-usr li
+    {
+        margin-right: 0;
+    }
+    
+    .cd-faq-user .cd-faq-items .top-menu .cd-faq-categories-usr
+    {
+        flex-direction: column;
+    }
+    
+    .cd-faq-group-users
+    {
+        display: block;
+        padding-left: 0;
+    }
+    
+    .cd-faq-group-users li
+    {
+        background: white;
+        margin-bottom: 20px;
+    }
+    
+    .cd-faq-user .cd-faq-group
+    {
+        display: block;
+        padding-left: 0;
+    }
+    
+    .cd-faq-user .cd-faq-group li
+    {
+        background: white;
+        padding: 10px 20px;
+        margin-bottom: 20px;
+    }
+    .cd-faq-user .cd-faq-group .cd-faq-title
+    {
+        padding: 0;
+        background: none;
+    }
+    .cd-faq-user .cd-faq-group .cd-faq-trigger
+    {
+        font-size: 24px;
+        margin: 10px 0;
+    }
+    
+    .cd-faq-user .cd-faq-group .cd-faq-content .name-author
+    {
+        font-size: 16px;
+    }
+    
+    .cd-faq-user .cd-faq-group form
+    {
+        flex-direction: column;
+        align-items: initial;
+        margin: 20px 0;
+    }
+    
+    .cd-faq-user .cd-faq-group form p
+    {
+        font-size: 16px;
+        margin-bottom: 5px;
+    }
+    
+    .cd-faq-user .cd-faq-group form select
+    {
+        margin-right: 0;
+        margin-bottom: 5px;
+    }
+    
+    
+}
+

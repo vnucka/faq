@@ -1,5 +1,5 @@
 <div class="menu">
-    <ul class="cd-faq-categories cd-faq-categories-usr">
+    <ul class="cd-faq-categories cd-faq-categories-usr left-menu">
         <li><a href="{{ url('/') }}">На главную</a></li>
         <li><a href="{{ url('/faq-create') }}">Добавить вопрос</a></li>
     @if($thisUserRole == 'admin')
