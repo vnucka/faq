@@ -1011,6 +1011,18 @@ form
         padding: 10px 20px;
         margin-bottom: 20px;
     }
+    
+    .cd-faq-user .cd-faq-group li ul
+    {
+        padding: 10px;
+    }
+    
+    .cd-faq-user .cd-faq-group li ul li
+    {
+        margin-bottom: 10px;
+        padding: 0;
+    }
+    
     .cd-faq-user .cd-faq-group .cd-faq-title
     {
         padding: 0;
@@ -1046,6 +1058,30 @@ form
         margin-bottom: 5px;
     }
     
+    .cd-faq-user .cd-faq-group li a
+    {
+        padding: 0;
+        font-size: 16px;
+        overflow: hidden;
+    }
+    
+    .cd-faq-user .menu .cd-faq-categories-usr 
+    {
+        display: flex;
+        flex-wrap: wrap;
+    }
+    
+    .cd-faq-user .menu .cd-faq-categories-usr li
+    {
+        flex-grow: 1;
+        margin: 0 5px 10px 5px;
+        text-align: center;
+    }
+    
+    .cd-faq-user .menu .cd-faq-categories-usr li a
+    {
+        padding: 0 16px;
+    }
     
 }
 
