@@ -10,6 +10,13 @@ use App\Answer;
 
 class UserController extends Controller
 {
+
+    /*
+     *
+     * ~~~~~~~~~~ Метод отображения пользователей ~~~~~~~~~~
+     *
+     * */
+
     public function users()
     {
         // Проверяем авторизацию пользователя
@@ -37,6 +44,13 @@ class UserController extends Controller
         return view('user', compact('thisUserRole', 'users', 'thisUser'));
     }
 
+
+    /*
+     *
+     * ~~~~~~~~~~ Метод редактирования пользователя ~~~~~~~~~~
+     *
+     * */
+
     public function userEdit()
     {
         // Проверяем авторизацию пользователя
@@ -60,7 +74,7 @@ class UserController extends Controller
 
             if(User::find($deleteUserId)->email == 'admin@local.ru')
             {
-                dd(123);
+                return $this->infoReturn("Ошибка удаления пользователя!", 'error');
             }
 
             if(User::where('id', $deleteUserId)->delete())
@@ -111,6 +125,13 @@ class UserController extends Controller
             return view('users.edit', compact('user'));
         }
     }
+
+
+    /*
+     *
+     * ~~~~~~~~~~ Метод изменения пароля пользователя ~~~~~~~~~~
+     *
+     * */
 
     public function changePassword()
     {
