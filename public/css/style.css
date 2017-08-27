@@ -860,6 +860,11 @@ form
     width: 100%;
 }
 
+.is-fixed
+{
+    width: 73.5%;
+}
+
 
 
 @media only screen and (min-width: 768px) 
