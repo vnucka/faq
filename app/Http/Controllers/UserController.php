@@ -72,6 +72,9 @@ class UserController extends Controller
         {
             $deleteUserId = $_REQUEST['delete_user'];
 
+            $usr = User::find($deleteUserId);
+            $user = $usr->name . " ($usr->email)";
+
             if(User::find($deleteUserId)->email == 'admin@local.ru')
             {
                 return $this->infoReturn("Ошибка удаления пользователя!", 'error');
@@ -82,6 +85,8 @@ class UserController extends Controller
                 Question::where('user_id', $deleteUserId)->delete();
                 Answer::where('user_id', $deleteUserId)->delete();
 
+                // Логируем действие
+                $this->logs("удалил пользователя $user с ID [$deleteUserId]");
                 return $this->infoReturn("Пользователь с ID <strong>$deleteUserId</strong> удален!", 'success');
             }
             return $this->infoReturn("Ошибка удаления пользователя!", 'error');
@@ -94,6 +99,8 @@ class UserController extends Controller
         {
             $user_name = $_REQUEST['name'];
             $user_role = $_REQUEST['role'];
+            $usr = User::find($user_id);
+            $user = $usr->name . " ($usr->email)";
 
             if(User::where('id',$user_id)->get()->toArray())
             { // Проверяем существования пользователя по переданному ID
@@ -103,13 +110,20 @@ class UserController extends Controller
                     $usrpwd = bcrypt($pwd);
                     if(User::where('id',$user_id)->update(['name'=>$user_name, 'role'=>$user_role, 'password'=>$usrpwd]))
                     {
+                        // Логируем действие
+                        $this->logs("изменил пароль пользователя $user с ID [$user_id]");
                         return $this->infoReturn("Пользователь <strong>$user_name</strong> изменен!", 'success');
                     }
                     return $this->infoReturn("Ошибка редактирования пользователя!", 'error');
 
                 } elseif(User::where('id',$user_id)->update(['name'=>$user_name, 'role'=>$user_role]))
                 { // Обновляем пользователя
+
+                    // Логируем действие
+                    $this->logs("изменил пользователя $user с ID [$user_id]");
+
                     return $this->infoReturn("Пользователь <strong>$user_name</strong> изменен!", 'success');
+
                 } else
                 {
                     return $this->infoReturn("Ошибка редактирования пользователя!", 'error');
@@ -159,11 +173,5 @@ class UserController extends Controller
         $userId = Auth::user()->id;
 
         return view('users.change-password', compact('userId'));
-    }
-
-    private function infoReturn($infoText, $infoClass)
-    {
-        $info = array('infoText'=>$infoText, 'infoClass'=>$infoClass);
-        return view('question.info', compact('info'));
     }
 }

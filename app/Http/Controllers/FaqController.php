@@ -67,7 +67,6 @@ class FaqController extends Controller
 
                 $themes = Theme::all()->toArray();
 
-
                 return view('question.edit', compact('question', 'themes', 'author', 'thisUserRole', 'users', 'questionUserId'));
             }
         }
@@ -77,9 +76,15 @@ class FaqController extends Controller
         { // Если существует author, значит пришел POST запрос от администратора / модератора
             $editID = (isset($_REQUEST['edit_question_id'])) ? $_REQUEST['edit_question_id'] : "";
             $author = (int)($_REQUEST['author']);
+            $oldName = Question::find($editID)->name;
 
             if(Question::where('id', $editID)->update(['name' => $_REQUEST['name'], 'text' => $_REQUEST['text'], 'theme_id' => $_REQUEST['theme'], 'user_id'=>$author, 'moderate'=>'moderate']))
             {
+                $theme = Theme::find($_REQUEST['theme'])->name;
+
+                // Логируем действие
+                $this->logs("отредактировал вопрос \"" . $oldName . "\" с ID ($editID) в теме \" $theme\" с ID (" . $_REQUEST['theme'] . ")");
+
                 return $this->infoReturn('Вопрос отредактирован!', 'success');
             }
         }
@@ -110,6 +115,7 @@ class FaqController extends Controller
         if(isset($_REQUEST['question_id']))
         { // Проверяем ID вопроса
             $id = $_REQUEST['question_id'];
+            $Question = Question::find($id);
 
             if(isset($_REQUEST['moderate']))
             { // Если существует POST moderate, делаем действие по модерации вопроса
@@ -118,28 +124,32 @@ class FaqController extends Controller
                 if(!Question::find($id))
                     return $this->infoReturn('Вопрос с таким ID отсутствует!', 'error');
 
-                // Проверяем что пришло по action, в соответствии с этим изменяем статус.
-                if($moderate == "confim" || $moderate == "reject" )
-                {
                     if(Question::where('id', $id)->update(['moderate'=>$moderate]))
                     {
+                        if($moderate == "reject")
+                        {
+                            $moderate = "Отклонить";
+                        } elseif ($moderate == "confim")
+                        {
+                            $moderate = "Подтвердить";
+                        } else
+                        {
+                            $moderate = "На модерацию";
+                        }
+
+
+                        //dd($moderate);
+
+                        $theme = Theme::find($Question->theme_id);
+
+                        $this->logs("отредактировал статус вопроса \"" . $Question->name . "\" с ID ($id) в теме \" $theme->name \" с ID (" . $theme->id . ") на \"$moderate\"");
                         return $this->infoReturn('Статус вопроса изменен!', 'success');
                     } else
                     {
                         return $this->infoReturn('Произошла ошибка при изменении статуса вопроса!', 'error');
                     }
-                } elseif ($moderate == "delete")
-                {
-                    if(Question::where('id',  $id)->delete())
-                    {
-                        return $this->infoReturn('Вопрос удален!', 'success');
-                    } else
-                    {
-                        return $this->infoReturn('Ошибка при удалении вопроса!', 'error');
-                    }
-                }
             } elseif (isset($_REQUEST['transfer']))
-            {
+            { // Иначе производим действия по переносу в другую группу
                 $id = $_REQUEST['question_id'];
                 $transfer = $_REQUEST['transfer'];
 
@@ -147,8 +157,10 @@ class FaqController extends Controller
                 {
                     if(Question::where('id', $id)->update(['theme_id'=>$transfer]))
                     {
-                        $themeName = Theme::find($transfer)->name;
-                        return $this->infoReturn("Вопрос перенесен в тему <strong>$themeName</strong>!", 'success');
+                        $theme = Theme::find($transfer);
+
+                        $this->logs("Перенес вопрос \"" . $Question->name . "\" с ID ($id) в тему \" $theme->name \" с ID (" . $theme->id . ")");
+                        return $this->infoReturn("Вопрос перенесен в тему <strong>$theme->name</strong>!", 'success');
                     }
                 }
                 return $this->infoReturn('Ошибка переноса вопроса!', 'error');
@@ -430,9 +442,11 @@ class FaqController extends Controller
             $themeId = $_REQUEST['edit_theme'];
             if(Theme::find($themeId))
             {
+                $oldName = Theme::find($themeId)->name;
                 $themeName = $_REQUEST['name'];
                 if(Theme::where('id', $themeId)->update(['name'=>$themeName]))
                 {
+                    $this->logs("отредактировал тему \"" . $oldName . "\" с ID ($themeId) на \" $themeName \"");
                     return $this->infoReturn('Тема отредактирована!', 'success');
                 }
                 return $this->infoReturn('Ошибкав редактирования темы!', 'error');
@@ -446,6 +460,8 @@ class FaqController extends Controller
             $themeId = $_REQUEST['delete_theme'];
             if(Theme::find($themeId))
             {
+                $theme = Theme::find($themeId);
+
                 if(Theme::find($themeId)->delete())
                 {
                     $questions = Question::where('theme_id', $themeId)->get()->toArray();
@@ -455,6 +471,8 @@ class FaqController extends Controller
                         Answer::where('question_id', $questionId)->delete();
                     }
                     Question::where('theme_id', $themeId)->delete();
+
+                    $this->logs("удалил тему \"" . $theme->name . "\" с ID ($themeId), так же все вопросы и ответы из этой темы");
 
                     return $this->infoReturn('Тема, вопросы и ответы удалены!', 'success');
                 }
@@ -583,50 +601,6 @@ class FaqController extends Controller
             }
         }
 
-    }
-
-
-    /*
-     *
-     * ~~~~~~~~~~ Метод отображения страницы информации ~~~~~~~~~~
-     *
-     * */
-
-    private function infoReturn($infoText, $infoClass)
-    {
-        $info = array('infoText'=>$infoText, 'infoClass'=>$infoClass);
-        return view('question.info', compact('info'));
-    }
-
-
-    /*
-     *
-     * ~~~~~~~~~~ Метод отображения не пустых групп ~~~~~~~~~~
-     *
-     * */
-
-    public function visibleTheme($thisUserRole)
-    {
-        $themes = Theme::all()->toArray();
-
-        for ($i = 0; $i < count($themes); $i++ )
-        { // Проверяем темы, если нет в ней ответов, удаляем ее из массива
-            $themeId = $themes[$i]['id'];
-            if($thisUserRole == 'user')
-            {
-                if(!Question::whereRaw("theme_id = $themeId and user_id = $thisUserId")->get()->toArray())
-                {
-                    unset($themes[$i]);
-                }
-            } else
-            {
-                if(!Question::whereRaw("theme_id = $themeId")->get()->toArray())
-                {
-                    unset($themes[$i]);
-                }
-            }
-        }
-        return $themes;
     }
 
     /*
