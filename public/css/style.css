@@ -219,6 +219,7 @@ header h1 {
     /* top and left value assigned in jQuery */
     position: fixed;
     z-index: 3;
+      width: 53.5%;
   }
   .no-js .cd-faq-categories {
     position: relative;
