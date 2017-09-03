@@ -14,7 +14,7 @@
                             <div class="form-group">
                                 <label for="author" class="col-md-4 control-label">Автор</label>
                                 <div class="col-md-6">
-                                    <select name="author" id="theme">
+                                    <select name="author" id="author">
                                         @foreach($users as $user)
                                             <option value="{{$user['id']}}" @if($questionUserId == $user['id']) selected @endif >{{$user['name']}} / {{$user['email']}}</option>
                                         @endforeach

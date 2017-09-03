@@ -4,11 +4,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Contracts\Auth\Guard;
-use App\User;
-use App\Answer;
-use App\Question;
-use App\Theme;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Question;
+use App\Models\Answer;
+use App\Models\Theme;
+use App\Models\User;
 
 class FaqController extends Controller
 {
@@ -22,7 +22,8 @@ class FaqController extends Controller
 
     public function faqCreate()
     {
-        $themes = Theme::all()->toArray();
+        //$themes = Theme::all()->toArray();
+        $themes = Theme::all();
 
         if(\Auth::user())
         {
@@ -59,8 +60,8 @@ class FaqController extends Controller
                 return $this->infoReturn('Вопрос с таким ID отсутствует!', 'error');
             } else
             {
-                $question = Question::where('id', $id)->get()->toArray();
-                $questionUserId = $question[0]['user_id'];
+                $question = Question::GetId($id)->get();
+                $questionUserId = $question[0]->user_id;
                 $author = User::find($questionUserId)->toArray();
                 $users = User::all()->toArray();
                 $thisUserRole = \Auth::user()->role;
@@ -78,7 +79,7 @@ class FaqController extends Controller
             $author = (int)($_REQUEST['author']);
             $oldName = Question::find($editID)->name;
 
-            if(Question::where('id', $editID)->update(['name' => $_REQUEST['name'], 'text' => $_REQUEST['text'], 'theme_id' => $_REQUEST['theme'], 'user_id'=>$author, 'moderate'=>'moderate']))
+            if(Question::GetId($editID)->update(['name' => $_REQUEST['name'], 'text' => $_REQUEST['text'], 'theme_id' => $_REQUEST['theme'], 'user_id'=>$author, 'moderate'=>'moderate']))
             {
                 $theme = Theme::find($_REQUEST['theme'])->name;
 
@@ -96,7 +97,7 @@ class FaqController extends Controller
             $editID = (isset($_REQUEST['edit_question_id'])) ? $_REQUEST['edit_question_id'] : null;
             if(\Auth::user()->id == $user_id || \Auth::user()->role == 'moderator')
             {
-               if(Question::where('id', $editID)->update(['name' => $_REQUEST['name'], 'text' => $_REQUEST['text'], 'theme_id' => $_REQUEST['theme'], 'moderate'=>'moderate']))
+               if(Question::GetId($editID)->update(['name' => $_REQUEST['name'], 'text' => $_REQUEST['text'], 'theme_id' => $_REQUEST['theme'], 'moderate'=>'moderate']))
                    return $this->infoReturn('Вопрос отредактирован!', 'success');
             }
         }
@@ -124,12 +125,12 @@ class FaqController extends Controller
                 if(!Question::find($id))
                     return $this->infoReturn('Вопрос с таким ID отсутствует!', 'error');
 
-                    if(Question::where('id', $id)->update(['moderate'=>$moderate]))
+                    if(Question::GetId($id)->update(['moderate'=>$moderate]))
                     {
                         if($moderate == "reject")
                         {
                             $moderate = "Отклонить";
-                        } elseif ($moderate == "confim")
+                        } elseif ($moderate == "confirm")
                         {
                             $moderate = "Подтвердить";
                         } else
@@ -153,9 +154,9 @@ class FaqController extends Controller
                 $id = $_REQUEST['question_id'];
                 $transfer = $_REQUEST['transfer'];
 
-                if(Question::where('id',$id)->get()->toArray() && Theme::where('id', $transfer)->get()->toArray())
+                if(Question::GetId($id)->get()->count() != 0 && Theme::where('id', $transfer)->get()->count() != 0)
                 {
-                    if(Question::where('id', $id)->update(['theme_id'=>$transfer]))
+                    if(Question::GetId($id)->update(['theme_id'=>$transfer]))
                     {
                         $theme = Theme::find($transfer);
 
@@ -190,7 +191,7 @@ class FaqController extends Controller
             if($thisUserId == $user)
             { // Получаем данные из POST запроса и создаем новый вопрос.
 
-                if(Question::where('name', $name)->get()->toArray())
+                if(Question::where('name', $name)->get()->count() != 0)
                 { // Проверяем, существует ливопрос с таким названием
                     return $this->infoReturn('Такой вопрос уже существует!', 'error');
                 } elseif(Question::create(['theme_id' => $theme, 'user_id' => $thisUserId, 'name' => $name, 'text' => $text]))
@@ -210,12 +211,12 @@ class FaqController extends Controller
             $user_name = $_REQUEST['user_name'];
             $user_email = $_REQUEST['email'];
 
-            if(User::where('email', $user_email)->get()->toArray())
+            if(User::where('email', $user_email)->get()->count() != 0)
             { // Проверяем существование пользователя по email
                 return $this->infoReturn('Пользователен с таким email уже зарегестрирован!', 'error');
             }
 
-            if(Question::where('name', $name)->get()->toArray())
+            if(Question::where('name', $name)->get()->count() != 0)
             { // Проверяем существования вопрос с таким же названием
                 return $this->infoReturn('Такой вопрос уже существует!', 'error');
             } else
@@ -274,14 +275,14 @@ class FaqController extends Controller
         { // Проверяем темы, если нет в ней ответов, удаляем ее из массива
             $themeId = $themes[$i]['id'];
             if($thisUserRole == 'user')
-            {
-                if(!Question::whereRaw("theme_id = $themeId and user_id = $thisUserId")->get()->toArray())
+            { // обработка тем для пользователя
+                if(Question::whereRaw("theme_id = $themeId and user_id = $thisUserId")->get()->count() == 0)
                 {
                     unset($themes[$i]);
                 }
             } else
-            {
-                if(!Question::whereRaw("theme_id = $themeId")->get()->toArray())
+            { // обработка тем для модератора / администратора
+                if(Question::whereRaw("theme_id = $themeId")->get()->count() == 0)
                 {
                     unset($themes[$i]);
                 }
@@ -334,7 +335,7 @@ class FaqController extends Controller
                 }
             } else
             {
-                dd('тут пока пусто');
+                return $this->infoReturn('Вопрос с таким ID не найден', 'error');
             }
         }
         return redirect('/bed-reg');
@@ -390,15 +391,15 @@ class FaqController extends Controller
         foreach ($theme as $th)
         { // Проходим по теме, собираем данные (количество вопросов в теме, опубликованных, количество вопросов без ответа)
             $themeId = $th['id'];
-            $countQuestion = Question::where('theme_id', $themeId)->count();
-            $visibleQuestion = Question::whereRaw("theme_id = $themeId and moderate = 'confim'")->count();
-            $questions = Question::where('theme_id', $themeId)->get()->toArray();
+            $countQuestion = Question::GetId($themeId)->count();
+            $visibleQuestion = Question::whereRaw("theme_id = $themeId and moderate = 'confirm'")->count();
+            $questions = Question::GetId($themeId)->get()->toArray();
             $countAnswers = 0;
 
             foreach ($questions as $question)
             { // Проверяем количество вопросов без ответа
                 $questionId = $question['id'];
-                if(Answer::where('question_id', $questionId)->count() == 0)
+                if(Answer::GetId($questionId)->count() == 0)
                 {
                     $countAnswers++;
                 }
@@ -464,11 +465,12 @@ class FaqController extends Controller
 
                 if(Theme::find($themeId)->delete())
                 {
-                    $questions = Question::where('theme_id', $themeId)->get()->toArray();
+                    $questions = Question::GetId($themeId)->get()->toArray();
+                    //$questions = Question::where('theme_id', $themeId)->get()->toArray();
                     foreach ($questions as $question)
                     {
                         $questionId = $question['id'];
-                        Answer::where('question_id', $questionId)->delete();
+                        Answer::GetId($questionId)->delete();
                     }
                     Question::where('theme_id', $themeId)->delete();
 
@@ -501,7 +503,7 @@ class FaqController extends Controller
         {// Если существует POST запрос, создаем тему
             $name = $_REQUEST['name'];
 
-            if(Theme::where('name', $name)->get()->toArray())
+            if(Theme::where('name', $name)->get()->count() != 0)
             {
                 return $this->infoReturn('Тема с заким названием существует!', 'error');
             }elseif(Theme::create(['name'=>$name]))
@@ -547,7 +549,7 @@ class FaqController extends Controller
             $id = $quest['id'];
             $questionUserId = $quest['user_id'];
             $questionUserName = User::find($questionUserId)->name;
-            $answer = Answer::where('question_id', $id)->get()->toArray();
+            $answer = Answer::GetId($id)->get()->toArray();
 
             foreach ($answer as $item)
             {
@@ -580,10 +582,11 @@ class FaqController extends Controller
         {
             if($visible == "1")
             {
-                return Question::where('moderate','confim')->orderBy('created_at', 'ASC')->get()->toArray();
+                return Question::Confirm()->orderBy('created_at', 'ASC')->get()->toArray();
+                // return Question::where('moderate','confirm')->orderBy('created_at', 'ASC')->get()->toArray();
             } elseif($visible == "0")
             {
-                return Question::where('moderate','!=','confim')->orderBy('created_at', 'ASC')->get()->toArray();
+                return Question::where('moderate','!=','confirm')->orderBy('created_at', 'ASC')->get()->toArray();
             } else
             {
                 return Question::all()->sortBy('created_at')->toArray();
@@ -591,10 +594,10 @@ class FaqController extends Controller
         } else {
             if($visible == "1")
             {
-                return Question::whereRaw("user_id = $thisUserId and moderate = 'confim'")->orderBy('created_at', 'ASC')->get()->toArray();
+                return Question::whereRaw("user_id = $thisUserId and moderate = 'confirm'")->orderBy('created_at', 'ASC')->get()->toArray();
             } else if($visible == "0")
             {
-                return Question::whereRaw("user_id = $thisUserId and moderate != 'confim'")->orderBy('created_at', 'ASC')->get()->toArray();
+                return Question::whereRaw("user_id = $thisUserId and moderate != 'confirm'")->orderBy('created_at', 'ASC')->get()->toArray();
             } else
             {
                 return Question::where('user_id' , $thisUserId)->orderBy('created_at', 'ASC')->get()->toArray();

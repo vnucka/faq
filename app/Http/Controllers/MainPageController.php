@@ -2,23 +2,27 @@
 
 namespace App\Http\Controllers;
 
-use App\Theme;
 use Illuminate\Http\Request;
-use App\Answer;
-use App\Question;
-use App\User;
+use App\Models\Answer;
+use App\Models\Question;
+use App\Models\Theme;
+use App\Models\User;
 
 class MainPageController extends Controller
 {
     public function viewMainPage()
     {
-        $question = Question::where('moderate', 'confim')->orderBy('created_at', 'DESC')->get()->toArray();
+        //$question = Question::Confirm()->orderBy('created_at', 'DESC')->get()->toArray();
+        $question = Question::Confirm()->orderBy('created_at', 'DESC')->get();
+
         $themes = Theme::all()->toArray();
 
-        for ($i = 0; $i < count($themes); $i++ )
+        for ($i = 0; $i <= count($themes); $i++ )
         { // Проверяем темы, если нет в ней ответов, удаляем ее из массива
+
             $themeId = $themes[$i]['id'];
-            if(!Question::whereRaw("theme_id = $themeId")->get()->toArray())
+
+            if(Question::whereRaw("theme_id = $themeId")->get()->count() == 0)
             {
                 unset($themes[$i]);
             }
@@ -29,21 +33,24 @@ class MainPageController extends Controller
 
         foreach ($question as $quest)
         {
-            $user = ['user_name' => Question::find($quest['id'])->user->name];
+            $user = $quest->user->name;
 
-            $answer = Answer::where('question_id', $quest['id'])->orderBy('created_at', 'DESC')->get()->toArray();
+            $answer = Answer::GetId($quest->id)->orderBy('created_at', 'DESC')->get();
             $answers = array();
 
             if($answer)
             { // Проверяем существование ответов на вопрос.
                 foreach ($answer as $oneAnswer)
                 {
+                    $oneAnswer = ['answer' => $oneAnswer->answer, 'user_id' => $oneAnswer->user_id, 'created_at' => date($oneAnswer->created_at)];
                     $userId = $oneAnswer['user_id'];
                     $answerItem = ['user_name' => User::find($userId)->name];
                     $answers[] = $oneAnswer + $answerItem;
                 }
             }
-            $questions[] = $quest + $user + array('answers' => $answers);
+
+            $quest = $quest->toArray();
+            $questions[] = $quest + array('answers' => $answers);
         }
 
         return view('welcome', compact('questions', 'themes'));

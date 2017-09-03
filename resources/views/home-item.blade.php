@@ -44,7 +44,7 @@
                                 {{ csrf_field() }}
                                 <p>Модерация</p>
                                 <select name="moderate" id="moderate">
-                                    <option value="confim">Подтвердить</option>
+                                    <option value="confirm">Подтвердить</option>
                                     <option value="reject">Отклонить</option>
                                     <option value="moderate">На модерацию</option>
                                 </select>

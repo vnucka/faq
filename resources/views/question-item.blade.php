@@ -7,7 +7,7 @@
                     <a class="cd-faq-trigger" href="#">{{$question['name']}}</a>
                     <div class="cd-faq-content">
                         <div class="header">
-                            <a href="#"><p class="name-author">{{$question['user_name']}}</p></a>
+                            <a href="#"><p class="name-author">{{$question['user']['name']}}</p></a>
                             <p class="date-create">/ {{$question['created_at']}}</p>
                             <hr>
                         </div>

@@ -4,9 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
-use App\User;
-use App\Question;
-use App\Answer;
+use App\Models\Question;
+use App\Models\Answer;
+use App\Models\User;
 
 class UserController extends Controller
 {
@@ -102,7 +102,7 @@ class UserController extends Controller
             $usr = User::find($user_id);
             $user = $usr->name . " ($usr->email)";
 
-            if(User::where('id',$user_id)->get()->toArray())
+            if(User::where('id',$user_id)->get()->count() != 0)
             { // Проверяем существования пользователя по переданному ID
                 if($_REQUEST['password'] != "")
                 { // Проверяем существования значения password
