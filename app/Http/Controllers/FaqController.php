@@ -22,7 +22,6 @@ class FaqController extends Controller
 
     public function faqCreate()
     {
-        //$themes = Theme::all()->toArray();
         $themes = Theme::all();
 
         if(\Auth::user())
@@ -77,9 +76,13 @@ class FaqController extends Controller
         { // Если существует author, значит пришел POST запрос от администратора / модератора
             $editID = (isset($_REQUEST['edit_question_id'])) ? $_REQUEST['edit_question_id'] : "";
             $author = (int)($_REQUEST['author']);
+
+            if(Question::where('id', $editID)->count() == 0)
+                return $this->infoReturn('Вопрос с таким ID отсутствует!', 'error');
+
             $oldName = Question::find($editID)->name;
 
-            if(Question::GetId($editID)->update(['name' => $_REQUEST['name'], 'text' => $_REQUEST['text'], 'theme_id' => $_REQUEST['theme'], 'user_id'=>$author, 'moderate'=>'moderate']))
+            if(Question::GetId($editID)->update(['name' => $_REQUEST['name'], 'text' => $_REQUEST['text'], 'theme_id' => $_REQUEST['theme'], 'user_id' => $author, 'moderate' => 'moderate']))
             {
                 $theme = Theme::find($_REQUEST['theme'])->name;
 
@@ -122,7 +125,7 @@ class FaqController extends Controller
             { // Если существует POST moderate, делаем действие по модерации вопроса
                 $moderate = $_REQUEST['moderate'];
 
-                if(!Question::find($id))
+                if(!$Question)
                     return $this->infoReturn('Вопрос с таким ID отсутствует!', 'error');
 
                     if(Question::GetId($id)->update(['moderate'=>$moderate]))
@@ -137,9 +140,6 @@ class FaqController extends Controller
                         {
                             $moderate = "На модерацию";
                         }
-
-
-                        //dd($moderate);
 
                         $theme = Theme::find($Question->theme_id);
 

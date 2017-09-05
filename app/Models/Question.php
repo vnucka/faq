@@ -15,7 +15,7 @@ class Question extends Model
 
     public function answer()
     {
-        return $this->belongsTo('App\Models\Answer', 'question_id');
+        return $this->hasMany('App\Models\Answer', 'question_id');
     }
 
     public function theme()

@@ -12,7 +12,6 @@ class MainPageController extends Controller
 {
     public function viewMainPage()
     {
-        //$question = Question::Confirm()->orderBy('created_at', 'DESC')->get()->toArray();
         $question = Question::Confirm()->orderBy('created_at', 'DESC')->get();
 
         $themes = Theme::all()->toArray();
@@ -28,25 +27,20 @@ class MainPageController extends Controller
             }
         }
 
-
         $questions = array();
 
         foreach ($question as $quest)
         {
             $user = $quest->user->name;
 
-            $answer = Answer::GetId($quest->id)->orderBy('created_at', 'DESC')->get();
+            $answer = $quest->answer;
             $answers = array();
 
-            if($answer)
-            { // Проверяем существование ответов на вопрос.
-                foreach ($answer as $oneAnswer)
-                {
-                    $oneAnswer = ['answer' => $oneAnswer->answer, 'user_id' => $oneAnswer->user_id, 'created_at' => date($oneAnswer->created_at)];
-                    $userId = $oneAnswer['user_id'];
-                    $answerItem = ['user_name' => User::find($userId)->name];
-                    $answers[] = $oneAnswer + $answerItem;
-                }
+            foreach ($answer as $oneAnswer)
+            {
+                $userId = $oneAnswer->user_id;
+                $answerItem = ['user_name' => User::find($userId)->name];
+                $answers[] = $oneAnswer->toArray() + $answerItem;
             }
 
             $quest = $quest->toArray();

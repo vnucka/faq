@@ -31,7 +31,6 @@ class UserController extends Controller
         if(isset($_REQUEST['role']))
         { // Проверяем существования параметра группы пользователя
             $role = $_REQUEST['role'];
-
             $users = User::where('role', $role)->get()->toArray();
         } else
         {
